@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
+from sympy_parser import parse_equations_list, get_equation_pretty_output
 import os
 import fitz  # PyMuPDF for PDF text extraction
 import re
@@ -316,14 +317,22 @@ def upload_file():
 
 @app.route('/results')
 def results():
-    """Display extracted equations on separate page"""
+    """Display extracted equations on separate page with SymPy parsing."""
+    equations = last_extraction["equations"]
+    parsed_equations = parse_equations_list(equations)
+    pretty_equations = [get_equation_pretty_output(p) for p in parsed_equations]
+
     return render_template(
         'results.html',
         filename=last_extraction["filename"],
         total=last_extraction["total"],
-        equations=last_extraction["equations"],
-        unsupported_operators=last_extraction["unsupported_operators"]
+        equations=equations,
+        parsed_equations=pretty_equations,
+        unsupported_operators=last_extraction["unsupported_operators"],
+        zip=zip  # ✅ pass zip into template
     )
+
+
 
 
 @app.route('/supported-operators')
@@ -337,3 +346,4 @@ def supported_operators():
 
 if __name__ == "__main__":
     app.run(debug=True)
+    

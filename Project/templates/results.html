@@ -4,10 +4,66 @@
     <title>Extraction Results</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 40px; }
-        .equation { background: #f5f5f5; padding: 10px; margin: 5px 0; border-left: 4px solid #007cba; }
-        .warning { background: #fff3cd; padding: 15px; margin: 10px 0; border-left: 4px solid #ffc107; }
-        .success { background: #d1ecf1; padding: 15px; margin: 10px 0; border-left: 4px solid #0c5460; }
-        .operator-list { background: #e9ecef; padding: 10px; margin: 10px 0; }
+        h1, h2 { color: #0c5460; }
+        .equation {
+            background: #f5f5f5;
+            padding: 10px;
+            margin: 8px 0;
+            border-left: 4px solid #007cba;
+            border-radius: 5px;
+        }
+        .warning {
+            background: #fff3cd;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .success {
+            background: #d1ecf1;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #0c5460;
+        }
+        .operator-list {
+            background: #e9ecef;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        details {
+            background: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 5px;
+            padding: 8px 12px;
+            transition: all 0.2s ease;
+        }
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+            list-style: none;
+        }
+        summary::marker {
+            display: none;
+        }
+        summary:hover {
+            color: #007cba;
+        }
+        details[open] {
+            background: #f8f9fa;
+        }
+        code {
+            background: #e9ecef;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+        a {
+            text-decoration: none;
+            color: #007cba;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -37,14 +93,16 @@
 
     <h2>📘 Extracted Equations:</h2>
     {% if equations %}
-        {% for equation in equations %}
-            <div class="equation">
-                <strong>{{ loop.index }})</strong> {{ equation }}
-            </div>
+        {% for equation, parsed in zip(equations, parsed_equations) %}
+            <details class="equation">
+                <summary><strong>{{ loop.index }})</strong> {{ equation }}</summary>
+                <pre style="margin-top:10px;">{{ parsed }}</pre>
+            </details>
         {% endfor %}
     {% else %}
         <p>No equations found that match the supported operator criteria.</p>
     {% endif %}
+
 
     <br>
     <a href="/">⬅ Back to Upload Page</a>
