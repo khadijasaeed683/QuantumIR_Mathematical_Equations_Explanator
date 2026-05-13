@@ -1,0 +1,2720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum IR PDF Analyzer - Agentic AI Edition</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #e2e8f0;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, #4a6cf7 1px, transparent 1px);
+            background-size: 20px 20px;
+            width: 100%;
+            height: 100%;
+            animation: floatParticles 20s linear infinite;
+        }
+
+        @keyframes floatParticles {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-1000px) rotate(720deg); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header - Enhanced with glow effect */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 30px;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+                        0 0 60px rgba(74, 108, 247, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(74, 108, 247, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            100% { left: 100%; }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-icon {
+            font-size: 36px;
+            color: #fff;
+            background: linear-gradient(135deg, #4a6cf7 0%, #8b5cf6 100%);
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(74, 108, 247, 0.4),
+                        inset 0 1px 1px rgba(255, 255, 255, 0.2);
+            position: relative;
+            animation: pulseGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 10px 30px rgba(74, 108, 247, 0.4), 
+                            inset 0 1px 1px rgba(255, 255, 255, 0.2); }
+            100% { box-shadow: 0 10px 40px rgba(74, 108, 247, 0.6),
+                            0 0 60px rgba(74, 108, 247, 0.3),
+                            inset 0 1px 1px rgba(255, 255, 255, 0.2); }
+        }
+
+        .logo-text h1 {
+            font-size: 32px;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text p {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-top: 8px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 20px;
+        }
+
+        .guide-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            color: #cbd5e1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .guide-btn:hover {
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            border-color: rgba(74, 108, 247, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(74, 108, 247, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .upload-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .upload-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #fff;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title i {
+            background: linear-gradient(135deg, #4a6cf7 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 32px;
+        }
+
+        .upload-area {
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 3px dashed rgba(74, 108, 247, 0.4);
+            border-radius: 20px;
+            padding: 60px 30px;
+            text-align: center;
+            margin: 30px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .upload-area:hover {
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+            border-color: rgba(74, 108, 247, 0.6);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(74, 108, 247, 0.3);
+        }
+
+        .upload-area.dragover {
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            border-color: rgba(74, 108, 247, 0.8);
+            border-style: solid;
+        }
+
+        .upload-icon {
+            font-size: 80px;
+            background: linear-gradient(135deg, #4a6cf7 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 25px;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 10px 20px rgba(74, 108, 247, 0.3));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        .upload-text h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .upload-text p {
+            color: #94a3b8;
+            margin-bottom: 25px;
+            font-size: 16px;
+            max-width: 400px;
+            line-height: 1.8;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .browse-btn {
+            background: linear-gradient(135deg, #4a6cf7 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 18px 45px;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(74, 108, 247, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .browse-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .browse-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(74, 108, 247, 0.6);
+        }
+
+        .file-info {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            border-left: 4px solid #10b981;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Status Messages */
+        #status {
+            margin: 25px 0;
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+            animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loading { 
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);
+            color: #60a5fa;
+            border-left: 4px solid #3b82f6;
+        }
+        .success { 
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(16, 185, 129, 0.2) 100%);
+            color: #10b981;
+            border-left: 4px solid #10b981;
+        }
+        .error { 
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%);
+            color: #ef4444;
+            border-left: 4px solid #ef4444;
+        }
+
+        /* Info Panel */
+        .info-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .info-item {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .info-item h3 {
+            color: #fff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .info-item p {
+            color: #94a3b8;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .info-item i {
+            background: linear-gradient(135deg, #4a6cf7 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            width: 24px;
+            font-size: 20px;
+        }
+
+        .quick-guide {
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quick-guide h3 {
+            color: #fff;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+        }
+
+        .quick-guide ol {
+            margin-left: 20px;
+            color: #94a3b8;
+        }
+
+        .quick-guide li {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            padding-left: 8px;
+        }
+
+        /* Agentic Workflow Visualization */
+        .workflow-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            margin: 40px 0;
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .workflow-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4a6cf7, #8b5cf6, #4a6cf7);
+            background-size: 200% 100%;
+            animation: gradientFlow 3s linear infinite;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .workflow-section.active {
+            display: block;
+            animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .workflow-title {
+            font-size: 32px;
+            color: #fff;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-weight: 800;
+        }
+
+        .workflow-title i {
+            background: linear-gradient(135deg, #4a6cf7 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 40px;
+        }
+
+        .workflow-timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .workflow-timeline::before {
+            content: '';
+            position: absolute;
+            left: 65px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #4a6cf7 0%, transparent);
+            opacity: 0.3;
+        }
+
+        .workflow-item {
+            display: grid;
+            grid-template-columns: 130px 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+            position: relative;
+            align-items: start;
+        }
+
+        .workflow-step {
+            width: 130px;
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        .step-badge {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            font-weight: 800;
+            font-size: 13px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 0 auto;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-badge::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, #4a6cf7, #8b5cf6, #4a6cf7);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .step-badge.completed {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
+            border-color: transparent;
+        }
+
+        .step-badge.completed::before {
+            opacity: 1;
+        }
+
+        .step-badge.in-progress {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            animation: pulse 1.5s infinite, glow 2s infinite alternate;
+            box-shadow: 0 15px 40px rgba(245, 158, 11, 0.4);
+            border-color: transparent;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 15px 40px rgba(245, 158, 11, 0.4); }
+            100% { box-shadow: 0 15px 50px rgba(245, 158, 11, 0.6), 
+                            0 0 60px rgba(245, 158, 11, 0.3); }
+        }
+
+        .step-badge.failed {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            transform: scale(0.95);
+            box-shadow: 0 15px 40px rgba(239, 68, 68, 0.4);
+            border-color: transparent;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1.05); }
+            50% { transform: scale(1.1); }
+        }
+
+        .step-label {
+            margin-top: 15px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .workflow-content {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 16px;
+            border-left: 5px solid #4a6cf7;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .workflow-content h4 {
+            color: #fff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .workflow-content p {
+            color: #94a3b8;
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .workflow-output {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #10b981;
+            font-size: 14px;
+            color: #cbd5e1;
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .workflow-output strong {
+            color: #10b981;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .status-indicator.pending {
+            background: #64748b;
+            box-shadow: 0 0 10px #64748b;
+        }
+
+        .status-indicator.in-progress {
+            background: #f59e0b;
+            box-shadow: 0 0 15px #f59e0b;
+            animation: blink 1s infinite;
+        }
+
+        .status-indicator.completed {
+            background: #10b981;
+            box-shadow: 0 0 15px #10b981;
+        }
+
+        .status-indicator.failed {
+            background: #ef4444;
+            box-shadow: 0 0 15px #ef4444;
+        }
+
+        @keyframes blink {
+            0%, 49%, 100% { opacity: 1; transform: scale(1); }
+            50%, 99% { opacity: 0.7; transform: scale(0.9); }
+        }
+
+        /* View Toggle Buttons */
+        .view-toggle {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 40px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .view-btn {
+            padding: 15px 35px;
+            border: 2px solid rgba(74, 108, 247, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: #94a3b8;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .view-btn:hover {
+            background: rgba(74, 108, 247, 0.2);
+            color: #fff;
+            border-color: rgba(74, 108, 247, 0.6);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(74, 108, 247, 0.3);
+        }
+
+        .view-btn.active {
+            background: linear-gradient(135deg, #4a6cf7 0%, #8b5cf6 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 10px 30px rgba(74, 108, 247, 0.4);
+            transform: translateY(-3px);
+        }
+
+        /* Results Section */
+        .results-section {
+            display: none;
+            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            margin-top: 40px;
+        }
+
+        .results-visible {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-box { 
+            background: rgba(255, 255, 255, 0.05); 
+            padding: 30px; 
+            border-radius: 16px;
+            margin: 25px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .quantum-yes { 
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%);
+            border-left: 5px solid #10b981;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quantum-no { 
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%);
+            border-left: 5px solid #ef4444;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .keyword { 
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            color: #e2e8f0;
+            padding: 10px 20px;
+            margin: 8px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .keyword:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
+        }
+
+        .list-view {
+            display: block;
+        }
+
+        .list-view.hidden {
+            display: none;
+        }
+
+        .equation-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .equation-item {
+            padding: 30px;
+            margin: 25px 0;
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-radius: 16px;
+            border-left: 5px solid #4a6cf7;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .equation-item:hover {
+            box-shadow: 0 15px 40px rgba(74, 108, 247, 0.3);
+            transform: translateX(10px) translateY(-5px);
+            border-left-color: #8b5cf6;
+        }
+
+        .equation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .equation-latex {
+            font-size: 1.4em;
+            margin: 20px 0;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 14px;
+            overflow-x: auto;
+            color: #e2e8f0;
+            font-family: 'Times New Roman', Times, serif;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .concept-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+            border-radius: 14px;
+            border-left: 4px solid #4a6cf7;
+        }
+
+        .concept-tag {
+            background: linear-gradient(135deg, #4a6cf7 0%, #8b5cf6 100%);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 6px 20px rgba(74, 108, 247, 0.3);
+            transition: all 0.3s;
+        }
+
+        .concept-tag:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(74, 108, 247, 0.4);
+        }
+
+        .symbols-section {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.15) 100%);
+            padding: 25px;
+            border-radius: 14px;
+            margin: 20px 0;
+            border-left: 4px solid #f59e0b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .symbols-title {
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #f59e0b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+        }
+
+        .symbol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .symbol-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .symbol-item:hover {
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
+            border-color: #f59e0b;
+            transform: translateY(-5px);
+        }
+
+        .symbol-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            color: #4a6cf7;
+            font-size: 24px;
+            min-width: 50px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(74, 108, 247, 0.5);
+        }
+
+        .symbol-def {
+            flex: 1;
+            color: #cbd5e1;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .edit-symbol-btn {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .edit-symbol-btn:hover {
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+        }
+
+        .highlighted-terms {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.15) 100%);
+            padding: 25px;
+            border-radius: 14px;
+            margin: 20px 0;
+            border-left: 4px solid #f59e0b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .highlighted-terms-title {
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #f59e0b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+        }
+
+        .term-highlight {
+            display: inline-block;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #000;
+            padding: 8px 18px;
+            border-radius: 20px;
+            margin: 8px;
+            cursor: help;
+            position: relative;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .term-highlight:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 12px 35px rgba(245, 158, 11, 0.4);
+        }
+
+        .term-tooltip {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            width: 320px;
+            font-size: 14px;
+            z-index: 1000;
+            margin-bottom: 15px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+            line-height: 1.6;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .term-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .term-highlight:hover .term-tooltip {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        .side-by-side-view {
+            display: none;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .side-by-side-view.active {
+            display: grid;
+            animation: fadeIn 0.6s;
+        }
+
+        .equation-panel {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 16px;
+            height: 700px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .equation-panel h3 {
+            color: #fff;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #4a6cf7;
+            font-size: 22px;
+        }
+
+        .equation-display {
+            font-size: 1.1em;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 14px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .equation-display:hover {
+            background: rgba(74, 108, 247, 0.2);
+            border-color: rgba(74, 108, 247, 0.5);
+            box-shadow: 0 10px 30px rgba(74, 108, 247, 0.3);
+            transform: translateX(5px);
+        }
+
+        .equation-display.selected {
+            background: linear-gradient(135deg, #4a6cf7 0%, #8b5cf6 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 15px 40px rgba(74, 108, 247, 0.4);
+            transform: translateX(10px);
+        }
+
+        .equation-number {
+            background: rgba(74, 108, 247, 0.3);
+            color: #e2e8f0;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.9em;
+            min-width: 80px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .equation-display.selected .equation-number {
+            background: white;
+            color: #4a6cf7;
+        }
+
+        .explanation-panel {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 35px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 700px;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .explanation-panel h3 {
+            color: #fff;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 20px;
+            font-size: 24px;
+        }
+
+        h2 { 
+            color: #fff; 
+            margin-top: 30px;
+            border-bottom: 3px solid #4a6cf7;
+            padding-bottom: 20px;
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .stats {
+            display: flex;
+            gap: 25px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            padding: 30px;
+            border-radius: 16px;
+            flex: 1;
+            min-width: 220px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4a6cf7 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 10px 30px rgba(74, 108, 247, 0.3);
+        }
+
+        .stat-box div:last-child {
+            color: #94a3b8;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 20px;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .action-btn.reset {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            color: #94a3b8;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn.reset:hover {
+            background: linear-gradient(135deg, rgba(100, 116, 139, 0.3) 0%, rgba(71, 85, 105, 0.3) 100%);
+            color: #fff;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(100, 116, 139, 0.3);
+        }
+
+        .action-btn.download {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+            border: none;
+        }
+
+        .action-btn.download:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(16, 185, 129, 0.6);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background: rgba(30, 41, 59, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+        }
+
+        .modal-content h3 {
+            color: #fff;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 24px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 15px;
+            margin: 15px 0;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: #4a6cf7;
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.2);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .cancel-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            color: #94a3b8;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cancel-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #4a6cf7 0%, #8b5cf6 100%);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #8b5cf6 0%, #4a6cf7 100%);
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 25px;
+                text-align: center;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .info-panel {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .upload-section, .info-panel, .results-section, .workflow-section {
+                padding: 25px;
+            }
+            
+            .upload-area {
+                padding: 40px 20px;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+            
+            .browse-btn, .action-btn {
+                padding: 16px 30px;
+                font-size: 16px;
+            }
+
+            .view-toggle {
+                flex-direction: column;
+            }
+
+            .view-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .step-badge {
+                width: 100px;
+                height: 100px;
+            }
+
+            .workflow-item {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .workflow-timeline::before {
+                display: none;
+            }
+
+            .side-by-side-view.active {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .logo-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+
+            .logo-text h1 {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-title {
+                font-size: 22px;
+            }
+            
+            .upload-text h3 {
+                font-size: 20px;
+            }
+            
+            .stat-box {
+                min-width: 100%;
+            }
+            
+            .symbol-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+                /* Light Theme Styles */
+        body.light-theme {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e6f0ff 50%, #f8fafc 100%);
+            color: #334155;
+        }
+
+        body.light-theme .header {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(74, 108, 247, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05),
+                        0 0 60px rgba(74, 108, 247, 0.05);
+        }
+
+        body.light-theme .logo-text h1 {
+            background: linear-gradient(135deg, #1e293b 0%, #4a6cf7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        body.light-theme .logo-text p {
+            color: #64748b;
+        }
+
+        body.light-theme .upload-section,
+        body.light-theme .info-panel,
+        body.light-theme .workflow-section,
+        body.light-theme .results-section,
+        body.light-theme .result-box,
+        body.light-theme .equation-item,
+        body.light-theme .stat-box,
+        body.light-theme .view-toggle,
+        body.light-theme .quick-guide {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(74, 108, 247, 0.1);
+            color: #334155;
+        }
+
+        body.light-theme .section-title,
+        body.light-theme h2,
+        body.light-theme h3,
+        body.light-theme h4 {
+            color: #1e293b;
+        }
+
+        body.light-theme .info-item p,
+        body.light-theme .upload-text p,
+        body.light-theme .workflow-content p,
+        body.light-theme .quick-guide li {
+            color: #64748b;
+        }
+
+        body.light-theme .bg-particles {
+            opacity: 0.1;
+        }
+
+        body.light-theme .bg-particles .particle {
+            background: radial-gradient(circle, #4a6cf7 1px, transparent 1px);
+        }
+
+        body.light-theme .upload-area {
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border: 3px dashed rgba(74, 108, 247, 0.3);
+        }
+
+        body.light-theme .upload-area:hover {
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+        }
+
+        body.light-theme .upload-text h3 {
+            color: #1e293b;
+        }
+
+        body.light-theme .guide-btn {
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.05) 0%, rgba(74, 108, 247, 0.02) 100%);
+            color: #4a6cf7;
+            border: 1px solid rgba(74, 108, 247, 0.2);
+        }
+
+        body.light-theme .guide-btn:hover {
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+        }
+
+        body.light-theme .browse-btn {
+            box-shadow: 0 10px 30px rgba(74, 108, 247, 0.2);
+        }
+
+        body.light-theme .file-info {
+            background: rgba(74, 108, 247, 0.05);
+            color: #4a6cf7;
+        }
+
+        body.light-theme .keyword {
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            color: #4a6cf7;
+            border: 1px solid rgba(74, 108, 247, 0.2);
+        }
+
+        body.light-theme .concept-tag {
+            color: white;
+        }
+
+        body.light-theme .footer {
+            color: #94a3b8;
+            border-top: 1px solid rgba(74, 108, 247, 0.1);
+        }
+
+        body.light-theme .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        body.light-theme .modal-content h3 {
+            color: #1e293b;
+        }
+
+        body.light-theme .modal-input {
+            background: rgba(74, 108, 247, 0.05);
+            color: #1e293b;
+            border: 2px solid rgba(74, 108, 247, 0.1);
+        }
+
+        body.light-theme .equation-display {
+            background: rgba(74, 108, 247, 0.05);
+            border: 1px solid rgba(74, 108, 247, 0.1);
+        }
+
+        body.light-theme .symbol-item {
+            background: rgba(74, 108, 247, 0.05);
+            border: 1px solid rgba(74, 108, 247, 0.1);
+        }
+
+        body.light-theme .explanation-box {
+            background: rgba(74, 108, 247, 0.05);
+            border-left: 4px solid #4a6cf7;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        body.light-theme .theme-toggle {
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border: 1px solid rgba(74, 108, 247, 0.2);
+            color: #4a6cf7;
+        }
+
+        .theme-toggle:hover {
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            color: #fff;
+            transform: rotate(30deg) scale(1.1);
+            box-shadow: 0 10px 30px rgba(74, 108, 247, 0.3);
+        }
+
+        body.light-theme .theme-toggle:hover {
+            background: linear-gradient(135deg, rgba(74, 108, 247, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+            color: #4a6cf7;
+            box-shadow: 0 10px 30px rgba(74, 108, 247, 0.2);
+        }
+        /* Add these animations to your existing CSS */
+@keyframes glossaryPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7);
+        border-left-color: #8b5cf6;
+    }
+    50% {
+        box-shadow: 0 0 0 25px rgba(139, 92, 246, 0);
+        border-left-color: #7c3aed;
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
+        border-left-color: #4a6cf7;
+    }
+}
+
+@keyframes termBounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+/* Style for term bubbles on hover */
+.term-label:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4) !important;
+}
+
+/* Light theme adjustments */
+body.light-theme .term-label {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%) !important;
+    border: 1px solid rgba(139, 92, 246, 0.2) !important;
+    color: #7c3aed !important;
+}
+
+body.light-theme .term-tooltip {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(139, 92, 246, 0.2) !important;
+}
+
+body.light-theme .term-tooltip h4 {
+    color: #1e293b !important;
+}
+
+body.light-theme .term-tooltip p {
+    color: #475569 !important;
+}
+
+body.light-theme .term-tooltip div:last-child {
+    border-top-color: rgba(255, 255, 255, 0.95) !important;
+}
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-particles">
+        <div class="particle"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-atom"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Quantum IR PDF Analyzer</h1>
+                    <p>Agentic AI Workflow Edition</p>
+                    <div class="badge">
+                        <i class="fas fa-bolt"></i> AUTONOMOUS ANALYSIS
+                    </div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+        <i class="fas fa-moon"></i>
+    </button>
+                <a href="/guide" class="guide-btn">
+                    <i class="fas fa-book"></i> User Guide
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <h2 class="section-title">
+                    <i class="fas fa-upload"></i> Upload Research PDF
+                </h2>
+                
+                <p style="color: #94a3b8; margin-bottom: 30px; font-size: 16px; line-height: 1.8;">
+                    Upload your Quantum IR PDF and our agentic AI will automatically execute an intelligent 8-step analysis workflow. No buttons to click - everything happens autonomously!
+                </p>
+
+                <!-- Upload Area -->
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">
+                        <h3>Drag & Drop Your PDF Here</h3>
+                        <p>Or click to browse files. Analysis starts automatically upon upload.</p>
+                        <button class="browse-btn" id="browseBtn">
+                            <i class="fas fa-folder-open"></i> Browse Files
+                        </button>
+                        <p style="color: #94a3b8; font-size: 14px; margin-top: 20px;">
+                            Max 50MB • PDF only • Auto-processing enabled
+                        </p>
+                    </div>
+                    <input type="file" id="pdfFile" class="file-input" accept=".pdf">
+                </div>
+
+                <div class="file-info" id="fileName">
+                    <i class="fas fa-info-circle"></i> No file selected. Ready for agentic analysis.
+                </div>
+
+                <div id="status"></div>
+            </div>
+            
+            <!-- Right Column: Info Panel -->
+            <div class="info-panel">
+                <div class="info-item">
+                    <h3><i class="fas fa-brain"></i> Agentic AI Engine</h3>
+                    <p>Our autonomous agent orchestrates an 8-step workflow with zero manual intervention, using advanced AI to analyze and extract insights from your Quantum IR research.</p>
+                </div>
+
+                <div class="info-item">
+                    <h3><i class="fas fa-bullseye"></i> Intelligent Analysis</h3>
+                    <p>Detects quantum concepts, extracts mathematical equations with simple explanations, and evaluates research relevance using multi-stage AI processing.</p>
+                </div>
+
+                <div class="info-item">
+                    <h3><i class="fas fa-project-diagram"></i> 8-Step Workflow</h3>
+                    <p>PDF Extraction → Quantum Detection → Equation Extraction → Symbol Analysis → Concept Identification → Term Highlighting → Metadata Enrichment → PDF Generation</p>
+                </div>
+
+                <div class="quick-guide">
+                    <h3><i class="fas fa-rocket"></i> Autonomous Process</h3>
+                    <ol>
+                        <li>Upload your Quantum IR research PDF</li>
+                        <li>Agentic analysis starts automatically</li>
+                        <li>Watch the workflow execute in real-time</li>
+                        <li>View comprehensive results instantly</li>
+                        <li>Download detailed PDF report</li>
+                        <li>No manual intervention required</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+            
+        <!-- Workflow Visualization -->
+        <div class="workflow-section" id="workflowSection">
+            <div class="workflow-title">
+                <i class="fas fa-project-diagram"></i> Agentic AI Workflow Execution
+            </div>
+            <div class="workflow-timeline" id="workflowTimeline"></div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection">
+            <h2><i class="fas fa-chart-bar"></i> Analysis Results</h2>
+            
+            <div class="result-box" id="fileInfo">
+                <h3><i class="fas fa-file-pdf"></i> File Information</h3>
+                <p><strong>Filename:</strong> <span id="filename">-</span></p>
+                <p><strong>Analysis Status:</strong> <span id="analysisStatus">Pending</span></p>
+            </div>
+            
+            <div class="result-box" id="quantumAnalysis">
+                <h3><i class="fas fa-atom"></i> Quantum IR Detection</h3>
+                <div id="quantumResult"></div>
+            </div>
+            
+            <div class="result-box" id="equationAnalysis">
+                <h3><i class="fas fa-square-root-alt"></i> Extracted Equations</h3>
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-number" id="equationCount">0</div>
+                        <div>Equations Found</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="conceptCount">0</div>
+                        <div>Quantum Concepts</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="symbolCount">0</div>
+                        <div>Symbols Analyzed</div>
+                    </div>
+                </div>
+
+                <div class="view-toggle" id="viewToggle" style="display: none;">
+                    <button class="view-btn active" onclick="switchView('list')">
+                        <i class="fas fa-list"></i> List View
+                    </button>
+                    <button class="view-btn" onclick="switchView('sidebyside')">
+                        <i class="fas fa-columns"></i> Side-by-Side
+                    </button>
+                </div>
+
+                <div id="listView" class="list-view">
+                    <div id="equationsContainer"></div>
+                </div>
+
+                <div id="sideBySideView" class="side-by-side-view">
+                    <div class="equation-panel">
+                        <h3><i class="fas fa-calculator"></i> Equations</h3>
+                        <div id="equationsList"></div>
+                    </div>
+                    <div class="explanation-panel">
+                        <h3><i class="fas fa-info-circle"></i> Details</h3>
+                        <p style="color: #94a3b8;">Select an equation to view detailed analysis.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn reset" onclick="resetUpload()">
+                    <i class="fas fa-redo"></i> Analyze Another Document
+                </button>
+                <button class="action-btn download" onclick="downloadPDF()" id="downloadPdfBtn">
+                    <i class="fas fa-download"></i> Download PDF Report
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Quantum IR PDF Analyzer © 2024 | Agentic AI Edition | Autonomous Quantum Research Analysis</p>
+        </div>
+    </div>
+
+    <!-- Symbol Edit Modal -->
+    <div id="symbolModal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fas fa-edit"></i> Edit Symbol</h3>
+            <label style="display: block; margin-top: 15px; color: #94a3b8; font-weight: 600;">Symbol:</label>
+            <input type="text" id="modalSymbol" class="modal-input" readonly>
+            <label style="display: block; margin-top: 15px; color: #94a3b8; font-weight: 600;">Definition:</label>
+            <input type="text" id="modalDefinition" class="modal-input" placeholder="Enter definition">
+            <div class="modal-buttons">
+                <button class="modal-btn save-btn" onclick="saveSymbolEdit()">Save Changes</button>
+                <button class="modal-btn cancel-btn" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced UI with animations and agentic features
+        // Configure MathJax
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady();
+                }
+            }
+        };
+
+        let analysisData = null;
+        let currentView = 'list';
+        let currentJobId = null;
+        let workflowTimer = null;
+        let isAnalyzing = false;
+
+        const uploadArea = document.getElementById('uploadArea');
+        const pdfFileInput = document.getElementById('pdfFile');
+        const fileNameDisplay = document.getElementById('fileName');
+        const statusDiv = document.getElementById('status');
+        const browseBtn = document.getElementById('browseBtn');
+        const workflowSection = document.getElementById('workflowSection');
+        const workflowTimeline = document.getElementById('workflowTimeline');
+        const resultsSection = document.getElementById('resultsSection');
+
+        // Enhanced drag and drop with animations
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length) {
+                pdfFileInput.files = e.dataTransfer.files;
+                handleFileSelection();
+            }
+        });
+
+        uploadArea.addEventListener('click', (e) => {
+            if (e.target === uploadArea || e.target.classList.contains('upload-icon') || 
+                e.target.classList.contains('upload-text') || e.target.closest('.upload-text')) {
+                pdfFileInput.click();
+            }
+        });
+
+        browseBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            pdfFileInput.click();
+        });
+
+        pdfFileInput.addEventListener('change', handleFileSelection);
+
+        function handleFileSelection() {
+            if (pdfFileInput.files.length > 0 && !isAnalyzing) {
+                const file = pdfFileInput.files[0];
+                fileNameDisplay.innerHTML = `
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i> 
+                    <strong>${file.name}</strong> - Ready for agentic analysis
+                `;
+                fileNameDisplay.style.borderLeftColor = '#10b981';
+                analyzePDF();
+            }
+        }
+
+        async function analyzePDF() {
+            const file = pdfFileInput.files[0];
+            if (!file || isAnalyzing) return;
+
+            isAnalyzing = true;
+            showMessage('<i class="fas fa-cogs fa-spin"></i> Initializing agentic AI workflow...', 'loading');
+            
+            resultsSection.style.display = 'none';
+            workflowSection.classList.remove('active');
+            
+            document.body.style.cursor = 'wait';
+            browseBtn.disabled = true;
+            browseBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                const response = await fetch("/", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    currentJobId = data.job_id;
+                    
+                    // Show workflow with animation
+                    setTimeout(() => {
+                        workflowSection.classList.add('active');
+                        initializeWorkflow();
+                        trackJobProgress();
+                    }, 300);
+                    
+                    showMessage('<i class="fas fa-rocket"></i> Agentic workflow launched! Tracking progress...', 'success');
+                } else {
+                    throw new Error('Upload failed');
+                }
+            } catch (error) {
+                showMessage('<i class="fas fa-exclamation-triangle"></i> Network error: ' + error.message, 'error');
+                resetUploadState();
+            }
+        }
+
+        function initializeWorkflow() {
+            const tasks = [
+                { name: 'PDF Extraction', icon: 'fa-file-pdf', desc: 'Extracting text and metadata from PDF' },
+                { name: 'Quantum IR Detection', icon: 'fa-atom', desc: 'Analyzing quantum information retrieval relevance' },
+                { name: 'Equation Extraction', icon: 'fa-square-root-alt', desc: 'Identifying mathematical equations' },
+                { name: 'Symbol Analysis', icon: 'fa-subscript', desc: 'Analyzing mathematical symbols and notations' },
+                { name: 'Concept Identification', icon: 'fa-tags', desc: 'Identifying quantum computing concepts' },
+                { name: 'Term Highlighting', icon: 'fa-highlighter', desc: 'Highlighting key technical terms' },
+                { name: 'Metadata Enrichment', icon: 'fa-database', desc: 'Enhancing analysis with metadata' },
+                { name: 'PDF Report Generation', icon: 'fa-download', desc: 'Generating comprehensive PDF report' }
+            ];
+
+            workflowTimeline.innerHTML = tasks.map((task, idx) => `
+                <div class="workflow-item">
+                    <div class="workflow-step">
+                        <div class="step-badge pending" id="badge-${idx}">
+                            <i class="fas ${task.icon} fa-2x"></i>
+                            <span style="font-size: 11px; margin-top: 10px;">STEP ${idx + 1}</span>
+                        </div>
+                        <div class="step-label">${task.name}</div>
+                    </div>
+                    <div class="workflow-content">
+                        <h4><span class="status-indicator pending" id="indicator-${idx}"></span>Awaiting Execution</h4>
+                        <p style="color: #94a3b8;">${task.desc}</p>
+                        <div class="workflow-output" id="output-${idx}" style="display: none;"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function trackJobProgress() {
+            if (!currentJobId) return;
+
+            try {
+                const response = await fetch(`/job/${currentJobId}`);
+                if (response.ok) {
+                    const jobData = await response.json();
+                    updateWorkflowUI(jobData);
+
+                    if (jobData.status === 'completed') {
+                        clearInterval(workflowTimer);
+                        setTimeout(() => {
+                            fetchAndDisplayResults();
+                        }, 1000);
+                    } else if (jobData.status === 'failed') {
+                        clearInterval(workflowTimer);
+                        showMessage('<i class="fas fa-exclamation-triangle"></i> Analysis failed. Please try again.', 'error');
+                        resetUploadState();
+                    } else {
+                        workflowTimer = setTimeout(trackJobProgress, 1500);
+                    }
+                }
+            } catch (error) {
+                console.error('Tracking error:', error);
+                workflowTimer = setTimeout(trackJobProgress, 2500);
+            }
+        }
+
+        function updateWorkflowUI(jobData) {
+            jobData.tasks.forEach((task, idx) => {
+                const badge = document.getElementById(`badge-${idx}`);
+                const indicator = document.getElementById(`indicator-${idx}`);
+                const content = document.querySelector(`#output-${idx}`).parentElement.querySelector('h4');
+                const desc = document.querySelector(`#output-${idx}`).parentElement.querySelector('p');
+                const output = document.getElementById(`output-${idx}`);
+
+                badge.className = `step-badge ${task.status}`;
+                indicator.className = `status-indicator ${task.status}`;
+
+                const statusText = task.status === 'pending' ? 'Awaiting Execution' :
+                                 task.status === 'in-progress' ? 'Processing...' :
+                                 task.status === 'completed' ? 'Completed Successfully' :
+                                 'Failed';
+                
+                content.innerHTML = `<span class="status-indicator ${task.status}" id="indicator-${idx}"></span>${statusText}`;
+
+                if (task.output) {
+                    output.style.display = 'block';
+                    const outputText = typeof task.output === 'string' ? task.output : JSON.stringify(task.output);
+                    output.innerHTML = `<strong>✓ Result:</strong> ${outputText.substring(0, 120)}${outputText.length > 120 ? '...' : ''}`;
+                }
+
+                if (task.error) {
+                    output.style.display = 'block';
+                    output.innerHTML = `<strong style="color: #ef4444;">✗ Error:</strong> ${task.error}`;
+                }
+
+                // Update description based on status
+                if (task.status === 'completed') {
+                    desc.style.color = '#10b981';
+                } else if (task.status === 'failed') {
+                    desc.style.color = '#ef4444';
+                }
+            });
+        }
+
+        async function fetchAndDisplayResults() {
+            if (!currentJobId) return;
+
+            try {
+                const response = await fetch(`/job/${currentJobId}/results`);
+                if (response.ok) {
+                    analysisData = await response.json();
+                    displayResults(analysisData);
+                    showMessage('<i class="fas fa-check-circle"></i> Agentic analysis complete!', 'success');
+                    resetUploadState();
+                }
+            } catch (error) {
+                console.error('Results fetch error:', error);
+                showMessage('<i class="fas fa-exclamation-triangle"></i> Error loading results', 'error');
+            }
+        }
+
+        function displayResults(results) {
+            window.pdfResults = results;
+
+            document.getElementById('filename').textContent = results.filename;
+            document.getElementById('analysisStatus').textContent = 'Completed';
+            document.getElementById('analysisStatus').style.color = '#10b981';
+
+            const quantumResult = document.getElementById('quantumResult');
+            if (results.is_quantum_ir) {
+                quantumResult.innerHTML = `
+                    <div class="quantum-yes">
+                        <h3><i class="fas fa-check-circle"></i> QUANTUM IR DETECTED</h3>
+                        <p style="margin-top: 15px; color: #cbd5e1;">This document contains Quantum Information Retrieval content.</p>
+                        <div style="margin-top: 20px;">
+                            ${results.keywords ? results.keywords.map(kw => `<span class="keyword">${kw}</span>`).join('') : ''}
+                        </div>
+                    </div>
+                `;
+            } else {
+                quantumResult.innerHTML = `
+                    <div class="quantum-no">
+                        <h3><i class="fas fa-times-circle"></i> NOT QUANTUM IR</h3>
+                        <p style="margin-top: 15px; color: #cbd5e1;">This document does not appear to focus on Quantum Information Retrieval.</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('equationCount').textContent = results.equations_count || 0;
+            document.getElementById('conceptCount').textContent = results.concepts ? results.concepts.length : 0;
+            document.getElementById('symbolCount').textContent = results.symbols ? results.symbols.length : 0;
+
+            if (results.equations && results.equations.length > 0) {
+                document.getElementById('viewToggle').style.display = 'flex';
+                displayListView(results.equations);
+                prepareSideBySideView(results.equations);
+            }
+
+            resultsSection.style.display = 'block';
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            if (window.MathJax) {
+                MathJax.typesetPromise().then(() => {
+                    console.log('MathJax rendering complete');
+                }).catch((err) => console.log('MathJax error:', err));
+            }
+        }
+
+        function displayListView(equations) {
+    const container = document.getElementById('equationsContainer');
+    container.innerHTML = `
+        <div class="equation-section">
+            ${equations.map((eq, idx) => {
+                const glossaryTerms = eq.glossary_terms || [];
+                const hasGlossary = glossaryTerms.length > 0;
+                
+                return `
+                <div class="equation-item">
+                    <div class="equation-header">
+                        <strong>${eq.id || `Equation ${idx + 1}`}</strong>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            ${hasGlossary ? `
+                                <div style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); 
+                                            color: white; padding: 6px 15px; border-radius: 20px; 
+                                            font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                                    <i class="fas fa-book"></i> ${glossaryTerms.length} term${glossaryTerms.length > 1 ? 's' : ''}
+                                </div>
+                            ` : ''}
+                            <div style="color: #94a3b8; font-size: 14px;">
+                                <i class="fas fa-magic"></i> Auto-analyzed
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="equation-latex">${eq.equation || 'No equation found'}</div>
+                    
+                    ${eq.explanation ? `
+                        <div class="explanation-box" style="margin: 20px 0; padding: 20px; 
+                                 background: rgba(0,0,0,0.2); border-radius: 12px; border-left: 4px solid #4a6cf7;">
+                            <p><strong><i class="fas fa-lightbulb"></i> AI Explanation:</strong> ${eq.explanation}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${eq.concepts ? `
+                        <div class="concept-tags">
+                            ${eq.concepts.map(c => `
+                                <span class="concept-tag">
+                                    <i class="fas fa-atom"></i> ${c}
+                                </span>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    ${eq.symbols ? `
+                        <div class="symbols-section">
+                            <div class="symbols-title">
+                                <i class="fas fa-calculator"></i> Symbol Analysis
+                            </div>
+                            <div class="symbol-grid">
+                                ${eq.symbols.map(s => `
+                                    <div class="symbol-item">
+                                        <span class="symbol-name">${s}</span>
+                                        <span class="symbol-def">
+                                            ${eq.symbol_definitions ? eq.symbol_definitions[s] || 'No definition' : 'No definition'}
+                                        </span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    ${hasGlossary ? `
+                        <div class="glossary-section" style="margin-top: 25px;">
+                            <div class="symbols-title" style="color: #8b5cf6; border-left-color: #8b5cf6;">
+                                <i class="fas fa-book-open"></i> Quantum Glossary Terms in This Equation
+                            </div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px;">
+                                ${glossaryTerms.map(term => `
+                                    <div class="term-bubble" 
+                                         data-term="${term.term}"
+                                         data-definition="${term.definition}"
+                                         style="position: relative; cursor: help;">
+                                        <div class="term-label" 
+                                             style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(124, 58, 237, 0.2) 100%);
+                                                    color: #8b5cf6; padding: 10px 18px; border-radius: 20px; 
+                                                    font-weight: 700; font-size: 14px; border: 1px solid rgba(139, 92, 246, 0.3);
+                                                    transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;">
+                                            <i class="fas fa-atom"></i> ${term.term}
+                                            <span style="font-size: 11px; background: rgba(139, 92, 246, 0.3); 
+                                                   padding: 2px 8px; border-radius: 10px; margin-left: 5px;">
+                                                ?
+                                            </span>
+                                        </div>
+                                        <div class="term-tooltip" 
+                                             style="display: none; position: absolute; bottom: 100%; left: 50%; 
+                                                    transform: translateX(-50%); background: rgba(15, 23, 42, 0.95); 
+                                                    color: white; padding: 20px; border-radius: 12px; width: 300px; 
+                                                    z-index: 1000; margin-bottom: 15px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                                                    border: 1px solid rgba(139, 92, 246, 0.3); backdrop-filter: blur(10px);">
+                                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                                                <div style="background: rgba(139, 92, 246, 0.2); color: #8b5cf6; 
+                                                     width: 40px; height: 40px; border-radius: 50%; display: flex; 
+                                                     align-items: center; justify-content: center; font-size: 20px;">
+                                                    <i class="fas fa-book"></i>
+                                                </div>
+                                                <h4 style="color: #fff; margin: 0; font-size: 18px;">${term.term}</h4>
+                                            </div>
+                                            <p style="color: #cbd5e1; line-height: 1.6; font-size: 14px; margin: 0;">
+                                                ${term.definition}
+                                            </p>
+                                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.1); 
+                                                 display: flex; justify-content: space-between; align-items: center;">
+                                                <span style="color: #94a3b8; font-size: 12px;">
+                                                    <i class="fas fa-quote-right"></i> Quantum IR Glossary
+                                                </span>
+                                                <button onclick="highlightTermInEquation('${term.term}', ${idx})" 
+                                                        style="background: rgba(139, 92, 246, 0.2); color: #8b5cf6; 
+                                                               border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 15px; 
+                                                               border-radius: 8px; font-size: 12px; cursor: pointer; 
+                                                               transition: all 0.3s;">
+                                                    Find in text
+                                                </button>
+                                            </div>
+                                            <div style="position: absolute; top: 100%; left: 50%; transform: translateX(-50%); 
+                                                 border: 8px solid transparent; border-top-color: rgba(15, 23, 42, 0.95);"></div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+    
+    // Initialize tooltip hover functionality
+    initializeGlossaryTooltips();
+}
+        function initializeGlossaryTooltips() {
+    const termBubbles = document.querySelectorAll('.term-bubble');
+    
+    termBubbles.forEach(bubble => {
+        const tooltip = bubble.querySelector('.term-tooltip');
+        const termLabel = bubble.querySelector('.term-label');
+        
+        // Show tooltip on hover
+        bubble.addEventListener('mouseenter', function(e) {
+            tooltip.style.display = 'block';
+            termLabel.style.background = 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)';
+            termLabel.style.color = 'white';
+            termLabel.style.transform = 'translateY(-2px)';
+            termLabel.style.boxShadow = '0 10px 25px rgba(139, 92, 246, 0.4)';
+        });
+        
+        // Hide tooltip on mouse leave
+        bubble.addEventListener('mouseleave', function(e) {
+            tooltip.style.display = 'none';
+            termLabel.style.background = 'linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(124, 58, 237, 0.2) 100%)';
+            termLabel.style.color = '#8b5cf6';
+            termLabel.style.transform = 'translateY(0)';
+            termLabel.style.boxShadow = 'none';
+        });
+        
+        // Position tooltip relative to viewport
+        bubble.addEventListener('mousemove', function(e) {
+            const rect = bubble.getBoundingClientRect();
+            const tooltipRect = tooltip.getBoundingClientRect();
+            
+            // Check if tooltip would go off-screen
+            if (rect.left + tooltipRect.width > window.innerWidth) {
+                tooltip.style.left = 'auto';
+                tooltip.style.right = '0';
+                tooltip.style.transform = 'translateX(0)';
+                
+                // Adjust arrow position
+                const arrow = tooltip.querySelector('div:last-child');
+                arrow.style.left = 'auto';
+                arrow.style.right = '20px';
+                arrow.style.transform = 'translateX(0)';
+            } else {
+                tooltip.style.left = '50%';
+                tooltip.style.right = 'auto';
+                tooltip.style.transform = 'translateX(-50%)';
+                
+                // Reset arrow position
+                const arrow = tooltip.querySelector('div:last-child');
+                arrow.style.left = '50%';
+                arrow.style.right = 'auto';
+                arrow.style.transform = 'translateX(-50%)';
+            }
+            
+            // Check if tooltip would go above viewport
+            if (rect.top - tooltipRect.height < 0) {
+                tooltip.style.bottom = '100%';
+                tooltip.style.top = 'auto';
+                tooltip.style.marginBottom = '15px';
+                tooltip.style.marginTop = '0';
+                
+                // Adjust arrow to bottom
+                const arrow = tooltip.querySelector('div:last-child');
+                arrow.style.top = '100%';
+                arrow.style.bottom = 'auto';
+                arrow.style.borderTopColor = 'transparent';
+                arrow.style.borderBottomColor = 'rgba(15, 23, 42, 0.95)';
+            } else {
+                tooltip.style.bottom = 'auto';
+                tooltip.style.top = '100%';
+                tooltip.style.marginBottom = '0';
+                tooltip.style.marginTop = '15px';
+                
+                // Reset arrow to top
+                const arrow = tooltip.querySelector('div:last-child');
+                arrow.style.top = '0';
+                arrow.style.bottom = 'auto';
+                arrow.style.borderTopColor = 'rgba(15, 23, 42, 0.95)';
+                arrow.style.borderBottomColor = 'transparent';
+                arrow.style.transform = 'translateX(-50%) translateY(-100%)';
+            }
+        });
+    });
+}
+
+function highlightTermInEquation(term, equationIndex) {
+    const equationItem = document.querySelectorAll('.equation-item')[equationIndex];
+    if (!equationItem) return;
+    
+    // Scroll to equation
+    equationItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    
+    // Add highlight animation
+    equationItem.style.animation = 'none';
+    setTimeout(() => {
+        equationItem.style.animation = 'glossaryPulse 2s';
+    }, 10);
+    
+    // Highlight the specific term bubble
+    const termBubble = equationItem.querySelector(`.term-bubble[data-term="${term}"]`);
+    if (termBubble) {
+        termBubble.querySelector('.term-label').style.animation = 'termBounce 0.5s';
+    }
+    
+    showMessage(`<i class="fas fa-search"></i> Highlighted "${term}" in Equation ${equationIndex + 1}`, 'success');
+}
+
+        function prepareSideBySideView(equations) {
+    const equationsList = document.getElementById('equationsList');
+    equationsList.innerHTML = equations.map((eq, idx) => {
+        const glossaryTerms = eq.glossary_terms || [];
+        const hasGlossary = glossaryTerms.length > 0;
+        
+        return `
+            <div class="equation-display" onclick="showEquationDetails(${idx})">
+                <span class="equation-number">${eq.id || `EQ ${idx + 1}`}</span>
+                <span style="flex: 1; text-align: center; font-family: 'Times New Roman', serif;">
+                    ${eq.equation ? eq.equation.substring(0, 40) + (eq.equation.length > 40 ? '...' : '') : 'No equation'}
+                </span>
+                ${hasGlossary ? `
+                    <span style="background: rgba(139, 92, 246, 0.2); color: #8b5cf6; padding: 3px 10px; 
+                          border-radius: 12px; font-size: 11px; font-weight: 700; white-space: nowrap;">
+                        ${glossaryTerms.length} term${glossaryTerms.length > 1 ? 's' : ''}
+                    </span>
+                ` : ''}
+            </div>
+        `;
+    }).join('');
+}
+
+        function showEquationDetails(index) {
+    const eq = analysisData.equations[index];
+    document.querySelectorAll('.equation-display').forEach(el => el.classList.remove('selected'));
+    document.querySelectorAll('.equation-display')[index].classList.add('selected');
+
+    const panel = document.querySelector('.explanation-panel');
+    const glossaryTerms = eq.glossary_terms || [];
+    
+    panel.innerHTML = `
+        <h3><i class="fas fa-calculator"></i> ${eq.id || `Equation ${index + 1}`}</h3>
+        <div class="equation-latex" style="margin: 25px 0;">${eq.equation || 'No equation found'}</div>
+        
+        ${glossaryTerms.length > 0 ? `
+            <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+                        border-radius: 14px; border-left: 4px solid #8b5cf6;">
+                <h4 style="color: #8b5cf6; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-book"></i> Glossary Terms in This Equation
+                </h4>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    ${glossaryTerms.map(term => `
+                        <div class="term-label" 
+                             style="background: rgba(139, 92, 246, 0.2); color: #8b5cf6; padding: 8px 16px; 
+                                    border-radius: 20px; font-size: 13px; font-weight: 600; cursor: help;
+                                    position: relative; border: 1px solid rgba(139, 92, 246, 0.3);">
+                            ${term.term}
+                            <div class="term-tooltip" 
+                                 style="display: none; position: absolute; bottom: 100%; left: 50%; 
+                                        transform: translateX(-50%); background: rgba(15, 23, 42, 0.95); 
+                                        color: white; padding: 15px; border-radius: 10px; width: 250px; 
+                                        z-index: 1000; margin-bottom: 10px; font-size: 13px;">
+                                <strong style="color: #8b5cf6; display: block; margin-bottom: 8px;">${term.term}</strong>
+                                ${term.definition}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        ` : ''}
+        
+        ${eq.explanation ? `
+            <div style="margin-bottom: 25px; padding: 25px; background: rgba(74, 108, 247, 0.1); 
+                        border-radius: 14px; border-left: 4px solid #4a6cf7;">
+                <h4 style="color: #4a6cf7; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-robot"></i> AI Explanation
+                </h4>
+                <p style="color: #cbd5e1; line-height: 1.8;">${eq.explanation}</p>
+            </div>
+        ` : ''}
+        
+        ${eq.concepts ? `
+            <div style="margin-bottom: 25px;">
+                <h4 style="color: #fff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-atom"></i> Quantum Concepts
+                </h4>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    ${eq.concepts.map(c => `
+                        <span style="background: linear-gradient(135deg, #4a6cf7 0%, #8b5cf6 100%); 
+                                    color: white; padding: 8px 16px; border-radius: 20px; 
+                                    font-size: 13px; font-weight: 600;">
+                            ${c}
+                        </span>
+                    `).join('')}
+                </div>
+            </div>
+        ` : ''}
+    `;
+
+    // Initialize tooltips in side panel
+    const termLabels = panel.querySelectorAll('.term-label');
+    termLabels.forEach(label => {
+        const tooltip = label.querySelector('.term-tooltip');
+        
+        label.addEventListener('mouseenter', () => {
+            tooltip.style.display = 'block';
+        });
+        
+        label.addEventListener('mouseleave', () => {
+            tooltip.style.display = 'none';
+        });
+    });
+
+    if (window.MathJax) {
+        MathJax.typesetPromise();
+    }
+}
+
+        function switchView(view) {
+            currentView = view;
+            const listView = document.getElementById('listView');
+            const sideBySideView = document.getElementById('sideBySideView');
+            const viewButtons = document.querySelectorAll('.view-btn');
+
+            if (view === 'list') {
+                listView.classList.remove('hidden');
+                sideBySideView.classList.remove('active');
+            } else {
+                listView.classList.add('hidden');
+                sideBySideView.classList.add('active');
+            }
+
+            viewButtons.forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.view-btn').classList.add('active');
+        }
+
+        async function downloadPDF() {
+            if (!window.pdfResults || !window.pdfResults.equations_count) {
+                showMessage('<i class="fas fa-exclamation-triangle"></i> No analysis results to download', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('downloadPdfBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating Report...';
+
+            try {
+                const response = await fetch(`/job/${currentJobId}/download-pdf`);
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `Quantum_IR_Analysis_${currentJobId}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    showMessage('<i class="fas fa-check-circle"></i> PDF report downloaded successfully!', 'success');
+                } else {
+                    throw new Error('Download failed');
+                }
+            } catch (error) {
+                showMessage('<i class="fas fa-exclamation-triangle"></i> Download failed: ' + error.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-download"></i> Download PDF Report';
+            }
+        }
+
+        function resetUpload() {
+            if (isAnalyzing) return;
+            
+            pdfFileInput.value = '';
+            fileNameDisplay.innerHTML = '<i class="fas fa-info-circle"></i> No file selected. Ready for agentic analysis.';
+            fileNameDisplay.style.borderLeftColor = '#10b981';
+            resultsSection.style.display = 'none';
+            workflowSection.classList.remove('active');
+            statusDiv.innerHTML = '';
+            statusDiv.className = '';
+            
+            if (workflowTimer) {
+                clearInterval(workflowTimer);
+                workflowTimer = null;
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetUploadState() {
+            isAnalyzing = false;
+            document.body.style.cursor = 'default';
+            browseBtn.disabled = false;
+            browseBtn.innerHTML = '<i class="fas fa-folder-open"></i> Browse Files';
+        }
+
+        function showMessage(text, type) {
+            statusDiv.innerHTML = text;
+            statusDiv.className = type;
+            
+            if (type !== 'loading') {
+                setTimeout(() => {
+                    statusDiv.innerHTML = '';
+                    statusDiv.className = '';
+                }, 5000);
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+        // Add some initial animations
+        document.querySelectorAll('.logo-icon, .upload-icon').forEach(el => {
+            el.style.animationPlayState = 'running';
+        });
+        
+        // Initialize theme toggle
+        initThemeToggle();
+        
+        // Initialize tooltips if any
+        const tooltips = document.querySelectorAll('[data-tooltip]');
+        tooltips.forEach(tip => {
+            tip.addEventListener('mouseenter', (e) => {
+                // Tooltip logic here
+            });
+        });
+    });
+
+        // Edit symbol functions (kept for completeness, though not used in agentic mode)
+        function editSymbol(equationId, symbol, index) {
+            document.getElementById('modalSymbol').value = symbol;
+            document.getElementById('symbolModal').classList.add('active');
+        }
+
+        function saveSymbolEdit() {
+            closeModal();
+            showMessage('<i class="fas fa-check-circle"></i> Symbol definition updated!', 'success');
+        }
+
+        function closeModal() {
+            document.getElementById('symbolModal').classList.remove('active');
+        }
+        // Theme Toggle Functionality
+        function initThemeToggle() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
+            
+            // Check for saved theme preference or default to dark
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            
+            // Apply saved theme
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+                themeIcon.className = 'fas fa-sun';
+                themeToggle.title = 'Switch to dark theme';
+            }
+            
+            // Toggle theme on click
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('light-theme');
+                
+                if (document.body.classList.contains('light-theme')) {
+                    themeIcon.className = 'fas fa-sun';
+                    themeToggle.title = 'Switch to dark theme';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    themeIcon.className = 'fas fa-moon';
+                    themeToggle.title = 'Switch to light theme';
+                    localStorage.setItem('theme', 'dark');
+                }
+                
+                // Add a subtle animation
+                themeToggle.style.transform = 'rotate(180deg) scale(1.2)';
+                setTimeout(() => {
+                    themeToggle.style.transform = 'rotate(0) scale(1)';
+                }, 300);
+                
+                // Re-render MathJax if needed
+                if (window.MathJax) {
+                    setTimeout(() => {
+                        MathJax.typesetPromise();
+                    }, 100);
+                }
+            });
+        }
+
+
+    </script>
+</body>
+</html>

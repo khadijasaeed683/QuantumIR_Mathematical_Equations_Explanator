@@ -1,2 +1,0 @@
-# config.py
-WOLFRAM_APP_ID = "YOUR_REAL_APPID_HERE"
